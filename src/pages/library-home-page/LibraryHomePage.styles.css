@@ -1,0 +1,19 @@
+.home-text-container {
+  position: relative;
+  display: flex;
+  height: 50vh;
+  justify-content: space-around;
+  margin: 32px 0;
+}
+
+.home-text {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.home-card-container {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 2rem;
+}

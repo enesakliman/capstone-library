@@ -1,11 +1,11 @@
 import "./App.css";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
-import LibraryHomePage from "./components/library-home-page/LibraryHomePage";
-import LibraryPublisherPage from "./components/library-publisher-page/LibraryPublisherPage";
-import LibraryCategoryPage from "./components/library-category-page/LibraryCategoryPage";
-import LibraryBookPage from "./components/library-book-page/LibraryBookPage";
-import LibraryAuthorPage from "./components/library-author-page/LibraryAuthorPage";
+import LibraryHomePage from "./pages/library-home-page/LibraryHomePage";
+import LibraryPublisherPage from "./pages/library-publisher-page/LibraryPublisherPage";
+import LibraryCategoryPage from "./pages/library-category-page/LibraryCategoryPage";
+import LibraryBookPage from "./pages/library-book-page/LibraryBookPage";
+import LibraryAuthorPage from "./pages/library-author-page/LibraryAuthorPage";
 
 
 function App() {
