@@ -5,6 +5,7 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import dataHome from "../../dataHome";
+import { Link } from "react-router-dom";
 
 function HomeCard() {
   return dataHome.map((data) => (
@@ -25,7 +26,9 @@ function HomeCard() {
           </Typography>
         </CardContent>
         <CardActions>
+          <Link to={data.nav}>
           <Button size="small">Daha fazlası...</Button>
+          </Link>
         </CardActions>
       </Card>
     </>

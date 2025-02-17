@@ -9,21 +9,25 @@ const dataHome = [
         title: 'Yayımcı',
         descripton: 'Eklediğiniz kitapların yayımcısını belirtir.',
         image: publisherImg,
+        nav: '/yayimci',
     },
     {
         title: 'Kategori',
         descripton: 'Eklediğiniz kitabın kategorisini belirtir.',
         image: categoryImg,
+        nav: '/kategori',
     },
     {
         title: 'Kitap',
         descripton: 'Eklediğiniz kitapların bilgilerini belirtir.',
         image: bookImg,
+        nav: '/kitap',
     },
     {
         title: 'Yazar',
         descripton: 'Eklediğiniz kitabın yazarını belirtir.',
         image: authorImg,
+        nav: '/yazar',
     }
 ]
 
