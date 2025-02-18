@@ -30,30 +30,32 @@
 }
 
 .publisher-input-container button {
+  color: white;
   width: 100px;
   height: 30px;
   border-radius: 5px;
   border: 1px solid #ccc;
-  background-color: #f0f0f0;
+  background-color: #007bff;
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .publisher-input-container button:hover {
-  background-color: #e0e0e0;
+  background-color: #0056b3;
   transition: all 0.3s;
 }
 
 /* Publisher Table */
 
 .publisher-table-container table {
-    width: 75vw;
-    border: 2px solid #fff;
-    border-collapse: collapse;
-    margin-top: 20px;
-    text-align: center;
+  width: 75vw;
+  border: 2px solid #fff;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
 }
 
-.publisher-table-container th, td {
-    border-bottom: 2px solid #fff;
+.publisher-table-container th,
+td {
+  border-bottom: 2px solid #fff;
 }
