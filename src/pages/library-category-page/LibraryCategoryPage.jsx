@@ -1,17 +1,13 @@
 import "./LibraryCategoryPage.styles.css";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useLibrary } from "../../context/library-context/LibraryContext";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Typography from "@mui/material/Typography";
 
 function LibraryCategoryPage() {
-  const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState({
-    id: null,
-    name: "",
-    description: "",
-  });
+  const { categories, setCategories, category, setCategory } = useLibrary();
 
   const fetchCategories = async () => {
     try {
@@ -70,9 +66,9 @@ function LibraryCategoryPage() {
 
   return (
     <div className="categories-container">
-        <Typography variant="h3" sx={{}} gutterBottom>
-          Kategori
-        </Typography>
+      <Typography variant="h3" sx={{}} gutterBottom>
+        Kategori
+      </Typography>
 
       <div className="categories-input-container">
         <form onSubmit={handleSubmit}>

@@ -1,18 +1,13 @@
 import "./LibraryAuthorPage.styles.css";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
+import { useLibrary } from "../../context/library-context/LibraryContext";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
 function LibraryAuthorPage() {
-  const [authors, setAuthors] = useState([]);
-  const [author, setAuthor] = useState({
-    id: null,
-    name: "",
-    birthDate: new Date().getDate(),
-    country: "",
-  });
+  const { authors, setAuthors, author, setAuthor } = useLibrary();
 
   const fetchAuthors = async () => {
     try {

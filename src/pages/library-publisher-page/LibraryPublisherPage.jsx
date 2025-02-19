@@ -1,18 +1,13 @@
 import axios from "axios";
 import "./LibraryPublisherPage.styles.css";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useLibrary } from "../../context/library-context/LibraryContext";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Typography from "@mui/material/Typography";
 
 function LibraryPublisherPage() {
-  const [publishers, setPublishers] = useState([]);
-  const [publisher, setPublisher] = useState({
-    id: null,
-    name: "",
-    establishmentYear: new Date().getFullYear(),
-    address: "",
-  });
+  const { publishers, setPublishers, publisher, setPublisher } = useLibrary();
 
   const fetchPublishers = async () => {
     try {
