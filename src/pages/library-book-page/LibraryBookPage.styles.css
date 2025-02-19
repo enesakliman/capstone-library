@@ -1,0 +1,65 @@
+.books-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  /* Input Area */
+  .books-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem 0;
+  }
+  
+  .books-input-container form {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+  }
+  
+  .books-input-container input {
+    width: 300px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 5px;
+  }
+  
+  .books-input-container button {
+    color: white;
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #007bff;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .books-input-container button:hover {
+    background-color: #0056b3;
+    transition: all 0.3s;
+  }
+
+
+  /* Books Table */
+  
+  .books-table-container table {
+    width: 75vw;
+    border: 2px solid #fff;
+    border-collapse: collapse;
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .books-table-container th,
+  td {
+    border-bottom: 2px solid #fff;
+  }
+
+
+  

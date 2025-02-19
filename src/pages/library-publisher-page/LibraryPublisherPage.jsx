@@ -7,18 +7,9 @@ import EditIcon from "@mui/icons-material/Edit";
 import Typography from "@mui/material/Typography";
 
 function LibraryPublisherPage() {
-  const { publishers, setPublishers, publisher, setPublisher } = useLibrary();
+  const { publishers, publisher, setPublisher, fetchPublishers } = useLibrary();
 
-  const fetchPublishers = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/v1/publishers"
-      );
-      setPublishers(response.data);
-    } catch (error) {
-      console.error("Yayınevleri alınırken hata oluştu:", error);
-    }
-  };
+  
 
   useEffect(() => {
     fetchPublishers();

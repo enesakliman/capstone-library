@@ -7,20 +7,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import Typography from "@mui/material/Typography";
 
 function LibraryCategoryPage() {
-  const { categories, setCategories, category, setCategory } = useLibrary();
+  const { categories,  category, setCategory, fetchCategories } = useLibrary();
 
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:8080/api/v1/categories"
-      );
-      setCategories(response.data);
-    } catch (error) {
-      console.error("Kategoriler alınırken hata oluştu:", error);
-    }
-  };
 
-  useEffect(() => {
+   useEffect(() => {
     fetchCategories();
   }, []);
 

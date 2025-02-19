@@ -7,16 +7,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
 function LibraryAuthorPage() {
-  const { authors, setAuthors, author, setAuthor } = useLibrary();
+  const { authors, author, setAuthor,fetchAuthors } = useLibrary();
 
-  const fetchAuthors = async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/v1/authors");
-      setAuthors(response.data);
-    } catch (error) {
-      console.error("Yazarlar alınırken hata oluştu:", error);
-    }
-  };
+
 
   useEffect(() => {
     fetchAuthors();
