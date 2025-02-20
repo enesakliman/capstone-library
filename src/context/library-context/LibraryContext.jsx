@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, } from "react";
+import { createContext, useContext, useState } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 
@@ -10,6 +10,7 @@ export const LibraryProvider = ({ children }) => {
   };
 
   // States
+  const [stock, setStock] = useState(0);
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState({
     id: null,
@@ -38,7 +39,7 @@ export const LibraryProvider = ({ children }) => {
     id: null,
     name: "",
     publicationYear: new Date().getFullYear(),
-    stock: 0,
+    stock: stock,
     author: {
       id: null,
       name: "",
@@ -57,6 +58,39 @@ export const LibraryProvider = ({ children }) => {
         description: "",
       },
     ],
+  });
+
+  const [borrowings, setBorrowings] = useState([]);
+  const [borrowing, setBorrowing] = useState({
+    id: null,
+    borrowerName: "",
+    borrowerMail: "",
+    borrowingDate: new Date().getDate(),
+    returnDate: new Date().getDate(),
+    book: {
+      id: null,
+      name: "",
+      publicationYear: new Date().getFullYear(),
+      stock: stock,
+      author: {
+        id: null,
+        name: "",
+        birthDate: new Date().getDate(),
+      },
+      publisher: {
+        id: null,
+        name: "",
+        establishmentYear: "",
+        address: "",
+      },
+      categories: [
+        {
+          id: null,
+          name: "",
+          description: "",
+        },
+      ],
+    },
   });
 
   const fetchCategories = async () => {
@@ -99,6 +133,14 @@ export const LibraryProvider = ({ children }) => {
     }
   };
 
+  const fetchBorrowings = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/api/v1/borrows");
+      setBorrowings(response.data);
+    } catch (error) {
+      console.error("Ödünçler alınırken hata oluştu:", error);
+    }
+  };
 
   const data = {
     categories,
@@ -117,10 +159,17 @@ export const LibraryProvider = ({ children }) => {
     setBooks,
     book,
     setBook,
+    borrowings,
+    setBorrowings,
+    borrowing,
+    setBorrowing,
+    stock,
+    setStock,
     fetchCategories,
     fetchPublishers,
     fetchAuthors,
     fetchBooks,
+    fetchBorrowings,
   };
   return (
     <LibraryContext.Provider value={data}>{children}</LibraryContext.Provider>

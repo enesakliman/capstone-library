@@ -7,6 +7,7 @@ import LibraryPublisherPage from "./pages/library-publisher-page/LibraryPublishe
 import LibraryCategoryPage from "./pages/library-category-page/LibraryCategoryPage";
 import LibraryBookPage from "./pages/library-book-page/LibraryBookPage";
 import LibraryAuthorPage from "./pages/library-author-page/LibraryAuthorPage";
+import LibraryBorrowingPage from "./pages/library-borrowing-page/LibraryBorrowingPage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/kategori" element={<LibraryCategoryPage />} />
           <Route path="/kitap" element={<LibraryBookPage />} />
           <Route path="/yazar" element={<LibraryAuthorPage />} />
+          <Route path="/kitap-alma" element={<LibraryBorrowingPage />} />
         </Routes>
       </LibraryProvider>
     </BrowserRouter>

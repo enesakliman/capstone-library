@@ -18,6 +18,7 @@ const pages = [
   { name: "Kategori", path: "/kategori" },
   { name: "Kitap", path: "/kitap" },
   { name: "Yazar", path: "/yazar" },
+  { name: "Kitap Alma", path: "/kitap-alma" },
 ];
 
 function Navbar() {
