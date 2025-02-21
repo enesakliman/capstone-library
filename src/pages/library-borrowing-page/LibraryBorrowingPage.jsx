@@ -23,37 +23,13 @@ function LibraryBorrowingPage() {
     const { name, value } = e.target;
 
     if (name === "bookId") {
-      const selectedBook = books.find((book) => book.id === parseInt(value));
-      setBorrowing({
-        ...borrowing,
-        book: selectedBook || {
-          id: 0,
-          name: "",
-          publicationYear: 0,
-          stock: 0,
-          author: {
-            id: 0,
-            name: '',
-            birthDate: '',
-            country: ''
-          },
-          publisher: {
-            id: 0,
-            name: '',
-            establishmentYear: 0,
-            address: ''
-          },
-          categories: [
-            {
-              id: 0,
-              name: '',
-              description: ''
-            }
-          ]
-        },
-      });
+      const selectedBook = books.find((book) => book.id === +value) || null;
+      setBorrowing((prev) => ({
+        ...prev,
+        book: selectedBook,
+      }));
     } else {
-      setBorrowing({ ...borrowing, [name]: value });
+      setBorrowing((prev) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -61,66 +37,76 @@ function LibraryBorrowingPage() {
     e.preventDefault();
 
     try {
-      if (!borrowing.book || !borrowing.book.id) {
-        alert("Lütfen bir kitap seçin!");
-        return;
-      }
+        if (!borrowing.book || !borrowing.book.id) {
+            alert("Lütfen bir kitap seçin!");
+            return;
+        }
 
-      const formattedBorrowing = {
-        ...borrowing,
-        borrowingDate: borrowing.borrowingDate,
-        returnDate: borrowing.returnDate,
-      };
+        // Book ID'sini kontrol edin
+        const bookId = parseInt(borrowing.book.id);
+        if (isNaN(bookId) || bookId <= 0) {
+            alert("Geçersiz kitap ID'si!");
+            return;
+        }
 
-      if (formattedBorrowing.id) {
-        await axios.put(
-          `http://localhost:8080/api/v1/borrows/${formattedBorrowing.id}`,
-          formattedBorrowing
-        );
-      } else {
-        await axios.post("http://localhost:8080/api/v1/borrows", formattedBorrowing);
-      }
-
-      setBorrowing({
-        id: null,
-        borrowerName: "",
-        borrowerMail: "",
-        borrowingDate: new Date().toISOString().split('T')[0],
-        returnDate: new Date().toISOString().split('T')[0],
-        book: {
-          id: 0,
-          name: "",
-          publicationYear: 0,
-          stock: 0,
-          author: {
-            id: 0,
-            name: '',
-            birthDate: '',
-            country: ''
-          },
-          publisher: {
-            id: 0,
-            name: '',
-            establishmentYear: 0,
-            address: ''
-          },
-          categories: [
-            {
-              id: 0,
-              name: '',
-              description: ''
+        // Tarihlerin tam ve doğru formatta olduğundan emin olun
+        const borrowingDate = borrowing.borrowingDate || new Date().toISOString().split('T')[0];
+        const returnDate = borrowing.returnDate || new Date().toISOString().split('T')[0];
+        
+        // Formatlı veri hazırlama - kesinlikle istenen formatta
+        const formattedBorrowing = {
+            borrowerName: borrowing.borrowerName,
+            borrowerMail: borrowing.borrowerMail,
+            borrowingDate: borrowingDate,
+            returnDate: returnDate,
+            bookForBorrowingRequest: {
+                bookId: bookId
             }
-          ]
-        },
-      });
-      fetchBorrowings();
+        };
+
+        // Veriyi kontrol edin
+        console.log("Backend'e gönderilen veri:", JSON.stringify(formattedBorrowing, null, 2));
+        
+        // API isteği - Explicit olarak belirtin
+        const response = await axios({
+            method: 'post',
+            url: 'http://localhost:8080/api/v1/borrows',
+            data: formattedBorrowing,
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        console.log("Sunucu yanıtı:", response.data);
+
+        // Başarılı olursa formu temizle
+        setBorrowing({
+            id: null,
+            borrowerName: "",
+            borrowerMail: "",
+            borrowingDate: new Date().toISOString().split('T')[0],
+            returnDate: new Date().toISOString().split('T')[0],
+            book: null,
+        });
+
+        // Listeyi yenile
+        fetchBorrowings();
+        alert("Kitap başarıyla ödünç alındı!");
+        
     } catch (error) {
-      console.error("İşlem sırasında bir hata oluştu.", error);
-      if (error.response) {
-        console.error("Sunucu yanıtı:", error.response.data);
-      }
+        console.error("İşlem sırasında bir hata oluştu:", error);
+        
+        // Detaylı hata bilgisi
+        if (error.response) {
+            console.error("Sunucu yanıtı:", error.response.status, error.response.data);
+            alert(`Sunucu hatası: ${error.response.status} - ${JSON.stringify(error.response.data || 'Internal Server Error')}`);
+        } else {
+            alert(`Bağlantı hatası: ${error.message}`);
+        }
     }
-  };
+};
+
 
   const handleDelete = async (id) => {
     try {
@@ -128,11 +114,15 @@ function LibraryBorrowingPage() {
       fetchBorrowings();
     } catch (error) {
       console.error("İşlem sırasında bir hata oluştu.", error);
+      alert("Silme işlemi başarısız oldu.");
     }
   };
 
   const handleEdit = (borrowItem) => {
-    setBorrowing(borrowItem);
+    setBorrowing({
+      ...borrowItem,
+      book: borrowItem.book || null,
+    });
   };
 
   return (
@@ -172,7 +162,7 @@ function LibraryBorrowingPage() {
           />
           <select 
             name="bookId" 
-            value={borrowing.book?.id || ""}
+            value={borrowing.book ? borrowing.book.id : ""}
             onChange={handleChange}
             required
           >
