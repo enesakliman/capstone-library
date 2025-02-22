@@ -61,36 +61,13 @@ export const LibraryProvider = ({ children }) => {
   });
 
   const [borrowings, setBorrowings] = useState([]);
+  // LibraryContext.js içinde
   const [borrowing, setBorrowing] = useState({
-    id: null,
     borrowerName: "",
     borrowerMail: "",
-    borrowingDate: new Date().getDate(),
-    returnDate: new Date().getDate(),
-    book: {
-      id: null,
-      name: "",
-      publicationYear: new Date().getFullYear(),
-      stock: stock,
-      author: {
-        id: null,
-        name: "",
-        birthDate: new Date().getDate(),
-      },
-      publisher: {
-        id: null,
-        name: "",
-        establishmentYear: "",
-        address: "",
-      },
-      categories: [
-        {
-          id: null,
-          name: "",
-          description: "",
-        },
-      ],
-    },
+    borrowingDate: "",
+    returnDate: "",
+    book: null,
   });
 
   const fetchCategories = async () => {
