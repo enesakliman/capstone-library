@@ -1,5 +1,5 @@
 import "./LibraryBookPage.styles.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLibrary } from "../../context/library-context/LibraryContext";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,6 +12,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 function LibraryBookPage() {
   // context hook
@@ -27,6 +29,8 @@ function LibraryBookPage() {
     fetchPublishers,
     fetchAuthors,
   } = useLibrary();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   // fetch işlemleri
   useEffect(() => {
@@ -42,22 +46,26 @@ function LibraryBookPage() {
     const { name, value } = e.target;
 
     // eğer input yazar seçimi ise yazarı set et
-    if (name === "authorId") { // eğer authorId ise yazarı set et
+    if (name === "authorId") {
+      // eğer authorId ise yazarı set et
       setBook({
         ...book,
         author: authors.find((a) => a.id === parseInt(value)) || {},
       });
-    } else if (name === "publisherId") { // eğer publisherId ise yayınevi set et
+    } else if (name === "publisherId") {
+      // eğer publisherId ise yayınevi set et
       setBook({
         ...book,
         publisher: publishers.find((p) => p.id === parseInt(value)) || {},
       });
-    } else if (name === "categoryId") { // eğer categoryId ise kategoriyi set et
+    } else if (name === "categoryId") {
+      // eğer categoryId ise kategoriyi set et
       setBook({
         ...book,
         categories: categories.filter((c) => c.id === parseInt(value)),
       });
-    } else { // diğer durumlarda input değerlerini set et
+    } else {
+      // diğer durumlarda input değerlerini set et
       setBook({ ...book, [name]: value });
     }
   };
@@ -71,9 +79,12 @@ function LibraryBookPage() {
     try {
       if (book.id) {
         await axios.put(`http://localhost:8080/api/v1/books/${book.id}`, book);
+        setSnackbarMessage("Yazar başarıyla güncellendi!");
       } else {
         await axios.post("http://localhost:8080/api/v1/books", book);
+        setSnackbarMessage("Yazar başarıyla eklendi!");
       }
+      setSnackbarOpen(true);
       // formu sıfırla ve kitapları tekrar çek
       setBook({
         id: null,
@@ -94,6 +105,8 @@ function LibraryBookPage() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/api/v1/books/${id}`);
+      setSnackbarMessage("Yazar başarıyla silindi!");
+      setSnackbarOpen(true);
       fetchBooks();
     } catch (error) {
       console.error("Silme işlemi sırasında hata oluştu:", error);
@@ -103,6 +116,10 @@ function LibraryBookPage() {
   // kitap düzenleme işlemi
   const handleEdit = (selectedBook) => {
     setBook(selectedBook);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -226,6 +243,21 @@ function LibraryBookPage() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MuiAlert
+          severity="success"
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseSnackbar}
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

@@ -1,8 +1,8 @@
-import publisherImg from "./assets/photos/yayinci.png";
-import categoryImg from "./assets/photos/library.webp";
+import publisherImg from "./assets/photos/yayinci.jpg";
+import categoryImg from "./assets/photos/library.jpg";
 import bookImg from "./assets/photos/book.jpg";
 import authorImg from "./assets/photos/yazar.jpg";
-import libraryBookImg from "./assets/photos/library-book.png";
+import libraryBookImg from "./assets/photos/library-book.jpg";
 
 const dataHome = [
   {

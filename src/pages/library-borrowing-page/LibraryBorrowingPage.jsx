@@ -1,7 +1,7 @@
 import "./LibraryBorrowingPage.styles.css";
 import { useLibrary } from "../../context/library-context/LibraryContext";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -12,6 +12,8 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 function LibraryBorrowingPage() {
   // context hook
@@ -23,6 +25,8 @@ function LibraryBorrowingPage() {
     fetchBorrowings,
     fetchBooks,
   } = useLibrary();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   // fetch işlemleri
   useEffect(() => {
@@ -35,13 +39,15 @@ function LibraryBorrowingPage() {
     // inputun name ve value değerlerini al
     const { name, value } = e.target;
 
-    if (name === "bookId") { // Eğer input kitap seçimi ise
+    if (name === "bookId") {
+      // Eğer input kitap seçimi ise
       const selectedBook = books.find((book) => book.id === +value) || null;
       setBorrowing((prev) => ({
         ...prev,
         book: selectedBook,
       }));
-    } else { // Diğer inputlar için
+    } else {
+      // Diğer inputlar için
       setBorrowing((prev) => ({ ...prev, [name]: value }));
     }
   };
@@ -50,8 +56,10 @@ function LibraryBorrowingPage() {
   const handleEdit = (borrowId) => {
     // Düzenlenecek ödünç alma bilgisini al
     const borrowToEdit = borrowings.find((borrow) => borrow.id === borrowId);
-    if (borrowToEdit) { // Eğer ödünç alma bilgisi varsa
-      setBorrowing({ // Formu doldur
+    if (borrowToEdit) {
+      // Eğer ödünç alma bilgisi varsa
+      setBorrowing({
+        // Formu doldur
         id: borrowToEdit.id,
         borrowerName: borrowToEdit.borrowerName,
         borrowerMail: borrowToEdit.borrowerMail,
@@ -68,7 +76,8 @@ function LibraryBorrowingPage() {
     e.preventDefault();
 
     try {
-      if (!borrowing.book?.id) { // Eğer kitap seçimi yapılmamışsa
+      if (!borrowing.book?.id) {
+        // Eğer kitap seçimi yapılmamışsa
         console.error("Kitap seçimi zorunludur");
         return;
       }
@@ -89,29 +98,19 @@ function LibraryBorrowingPage() {
       // Eğer ödünç alma bilgisi varsa güncelleme, yoksa yeni ödünç alma bilgisi ekleme
       let response;
       if (borrowing.id) {
-        // Update existing borrowing
         response = await axios.put(
           `http://localhost:8080/api/v1/borrows/${borrowing.id}`,
-          formattedBorrowing,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+          formattedBorrowing
         );
+        setSnackbarMessage("Yazar başarıyla güncellendi!");
       } else {
-        // Create new borrowing
         response = await axios.post(
           "http://localhost:8080/api/v1/borrows",
-          formattedBorrowing,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+          formattedBorrowing
         );
+        setSnackbarMessage("Yazar başarıyla eklendi!");
       }
-
+      setSnackbarOpen(true);
       // Eğer işlem başarılıysa
       if (response.status === 200 || response.status === 201) {
         fetchBorrowings();
@@ -124,7 +123,8 @@ function LibraryBorrowingPage() {
           book: null,
         });
       }
-    } catch (error) { // Eğer hata oluşursa
+    } catch (error) {
+      // Eğer hata oluşursa
       console.error(
         "İşlem sırasında hata:",
         error.response?.data || error.message
@@ -136,6 +136,8 @@ function LibraryBorrowingPage() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/api/v1/borrows/${id}`);
+      setSnackbarMessage("Yazar başarıyla silindi!");
+      setSnackbarOpen(true);
       fetchBorrowings();
     } catch (error) {
       console.error(
@@ -143,6 +145,10 @@ function LibraryBorrowingPage() {
         error.response?.data || error.message
       );
     }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -236,19 +242,42 @@ function LibraryBorrowingPage() {
                 <TableCell align="center">{borrow.borrowerMail}</TableCell>
                 <TableCell align="center">{borrow.borrowingDate}</TableCell>
                 <TableCell align="center">{borrow.returnDate || "-"}</TableCell>
-                <TableCell align="center">{borrow.book?.name || "Bilinmiyor"}</TableCell>
                 <TableCell align="center">
-                  <button onClick={() => handleEdit(borrow.id)}><EditIcon/></button>
+                  {borrow.book?.name || "Bilinmiyor"}
                 </TableCell>
                 <TableCell align="center">
-                  <button onClick={() => handleDelete(borrow.id)}
-                    style={{ color: "red" }}><DeleteIcon/></button>
+                  <button onClick={() => handleEdit(borrow.id)}>
+                    <EditIcon />
+                  </button>
+                </TableCell>
+                <TableCell align="center">
+                  <button
+                    onClick={() => handleDelete(borrow.id)}
+                    style={{ color: "red" }}
+                  >
+                    <DeleteIcon />
+                  </button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MuiAlert
+          severity="success"
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseSnackbar}
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

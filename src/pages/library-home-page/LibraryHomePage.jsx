@@ -21,10 +21,10 @@ function LibraryHomePage() {
               Kişisel kütüphanenize hoş geldiniz.
             </Typography>
             <Typography variant="h6" sx={{ maxWidth: "400px" }} gutterBottom>
-              Kişisel kütüphanenizi oluşutabilir, yönetebilir ve
-              paylaşabilirsiniz. Detaylı bir şekilde arama yapabilir ve
-              kitaplarınızı kategorilere ayırabilirsiniz. Yayım evlerini,
-              yazarları ve kitapları ekleyebilirsiniz.
+              Kişisel kütüphanenizde kitaplarınızı ekleyebilir, düzenleyebilir
+              ve silebilirsiniz. Ayrıca kitaplarınızı kategorilere göre
+              filtreleyebilirsiniz. Yayın evi ve yazarlarınızı ekleyebilir,
+              düzenleyebilir ve silebilirsiniz.
             </Typography>
           </div>
         </div>

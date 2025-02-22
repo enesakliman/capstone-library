@@ -14,7 +14,7 @@ function HomeCard() {
         <CardMedia
           component="img"
           alt={data.title}
-          height="140"
+          height="300"
           image={data.image}
         />
         <CardContent>

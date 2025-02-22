@@ -1,6 +1,6 @@
 import "./LibraryAuthorPage.styles.css";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLibrary } from "../../context/library-context/LibraryContext";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,38 +12,43 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 function LibraryAuthorPage() {
   // context hook
   const { authors, author, setAuthor, fetchAuthors } = useLibrary();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  // fetch authors işlemi
+  // fetch işlemi
   useEffect(() => {
     fetchAuthors();
   }, []);
 
-  // inputlardaki değişiklikleri takip eden fonksiyon
+  // input değerlerini güncellemek için
   const handleChange = (e) => {
     setAuthor({ ...author, [e.target.name]: e.target.value });
   };
 
   // form submit işlemi
   const handleSubmit = async (e) => {
-    // formun default işlemlerini engelle
     e.preventDefault();
 
-    // yeni yazar eklemek için post, var olanı güncellemek için put requesti
+    // eğer author id varsa güncelleme yap, yoksa yeni yazar ekle
     try {
       if (author.id) {
         await axios.put(
           `http://localhost:8080/api/v1/authors/${author.id}`,
           author
         );
+        setSnackbarMessage("Yazar başarıyla güncellendi!");
       } else {
         await axios.post("http://localhost:8080/api/v1/authors", author);
+        setSnackbarMessage("Yazar başarıyla eklendi!");
       }
+      setSnackbarOpen(true);
 
-      // formu sıfırla ve yazarları tekrar çek
       setAuthor({
         id: null,
         name: "",
@@ -52,7 +57,6 @@ function LibraryAuthorPage() {
       });
       fetchAuthors();
     } catch (error) {
-      // hata durumunda console'a yazdır
       console.error("İşlem sırasında hata oluştu:", error);
     }
   };
@@ -61,6 +65,8 @@ function LibraryAuthorPage() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/api/v1/authors/${id}`);
+      setSnackbarMessage("Yazar başarıyla silindi!");
+      setSnackbarOpen(true);
       fetchAuthors();
     } catch (error) {
       console.error("Silme işlemi sırasında hata oluştu:", error);
@@ -71,10 +77,16 @@ function LibraryAuthorPage() {
   const handleEdit = (author) => {
     setAuthor(author);
   };
+
+  // snackbar kapatma işlemi
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
     <div className="authors-container">
       <div className="authors-input-container">
-        <Typography variant="h3" sx={{}} gutterBottom>
+        <Typography variant="h3" gutterBottom>
           Yazar
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -120,13 +132,13 @@ function LibraryAuthorPage() {
                 <TableCell align="center">{auth.birthDate}</TableCell>
                 <TableCell align="center">{auth.country}</TableCell>
                 <TableCell align="center">
-                  <button onClick={() => handleEdit(auth)} >
+                  <button onClick={() => handleEdit(auth)}>
                     <EditIcon />
                   </button>
                 </TableCell>
                 <TableCell align="center">
                   <button
-                    onClick={() => handleDelete(auth.id)} 
+                    onClick={() => handleDelete(auth.id)}
                     style={{ color: "red" }}
                   >
                     <DeleteIcon />
@@ -137,6 +149,21 @@ function LibraryAuthorPage() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MuiAlert
+          severity="success"
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseSnackbar}
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import axios from "axios";
 import "./LibraryPublisherPage.styles.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLibrary } from "../../context/library-context/LibraryContext";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -12,38 +12,38 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 function LibraryPublisherPage() {
-  // context hook
   const { publishers, publisher, setPublisher, fetchPublishers } = useLibrary();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  // fetch publishers işlemi
   useEffect(() => {
     fetchPublishers();
   }, []);
 
-  // inputlardaki değişiklikleri takip eden fonksiyon
   const handleChange = (e) => {
     setPublisher({ ...publisher, [e.target.name]: e.target.value });
   };
 
-  // form submit işlemi
   const handleSubmit = async (e) => {
-    // formun default işlemlerini engelle
     e.preventDefault();
 
-    // yeni yayınevi eklemek için post, var olanı güncellemek için put requesti
     try {
       if (publisher.id) {
         await axios.put(
           `http://localhost:8080/api/v1/publishers/${publisher.id}`,
           publisher
         );
+        setSnackbarMessage("Yayınevi başarıyla güncellendi!");
       } else {
         await axios.post("http://localhost:8080/api/v1/publishers", publisher);
+        setSnackbarMessage("Yayınevi başarıyla eklendi!");
       }
+      setSnackbarOpen(true);
 
-      // formu sıfırla ve yayınevlerini tekrar çek
       setPublisher({
         id: null,
         name: "",
@@ -52,33 +52,33 @@ function LibraryPublisherPage() {
       });
       fetchPublishers();
     } catch (error) {
-      // hata durumunda console'a yazdır
-
       console.error("İşlem sırasında hata oluştu:", error);
     }
   };
 
-  // yayınevi silme işlemi
   const handleDelete = async (id) => {
-    if (window.confirm("Bu yayınevini silmek istediğine emin misin?")) {
-      try {
-        await axios.delete(`http://localhost:8080/api/v1/publishers/${id}`);
-        fetchPublishers();
-      } catch (error) {
-        console.error("Silme sırasında hata oluştu:", error);
-      }
+    try {
+      await axios.delete(`http://localhost:8080/api/v1/publishers/${id}`);
+      setSnackbarMessage("Yayınevi başarıyla silindi!");
+      setSnackbarOpen(true);
+      fetchPublishers();
+    } catch (error) {
+      console.error("Silme sırasında hata oluştu:", error);
     }
   };
 
-  // yayınevi düzenleme işlemi
   const handleEdit = (pub) => {
     setPublisher(pub);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   return (
     <div className="publisher-container">
       <div className="publisher-input-container">
-        <Typography variant="h3" sx={{}} gutterBottom>
+        <Typography variant="h3" gutterBottom>
           Yayınevi
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -109,7 +109,6 @@ function LibraryPublisherPage() {
           <button type="submit">{publisher.id ? "Güncelle" : "Ekle"}</button>
         </form>
       </div>
-
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -150,6 +149,22 @@ function LibraryPublisherPage() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MuiAlert
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseSnackbar}
+          severity="success"
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }

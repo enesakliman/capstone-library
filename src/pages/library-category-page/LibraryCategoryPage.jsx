@@ -1,5 +1,5 @@
 import "./LibraryCategoryPage.styles.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useLibrary } from "../../context/library-context/LibraryContext";
 import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -12,10 +12,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 function LibraryCategoryPage() {
   // context hook
   const { categories, category, setCategory, fetchCategories } = useLibrary();
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   // fetch categories işlemi
   useEffect(() => {
@@ -38,13 +42,17 @@ function LibraryCategoryPage() {
           `http://localhost:8080/api/v1/categories/${category.id}`,
           category
         );
+        setSnackbarMessage("Yazar başarıyla güncellendi!");
       } else {
         await axios.post("http://localhost:8080/api/v1/categories", category);
+        setSnackbarMessage("Yazar başarıyla eklendi!");
       }
+      setSnackbarOpen(true);
       // formu sıfırla ve kategorileri tekrar çek
       setCategory({ id: null, name: "", description: "" });
       fetchCategories();
-    } catch (error) { // hata durumunda console'a yazdır
+    } catch (error) {
+      // hata durumunda console'a yazdır
       console.error("İşlem sırasında hata oluştu:", error);
     }
   };
@@ -54,6 +62,8 @@ function LibraryCategoryPage() {
     if (window.confirm("Bu kategoriyi silmek istediğinizden emin misiniz?")) {
       try {
         await axios.delete(`http://localhost:8080/api/v1/categories/${id}`);
+        setSnackbarMessage("Yazar başarıyla silindi!");
+        setSnackbarOpen(true);
         fetchCategories();
       } catch (error) {
         console.error("Silme işlemi sırasında hata oluştu:", error);
@@ -65,6 +75,10 @@ function LibraryCategoryPage() {
   const handleEdit = (id) => {
     const selectedCategory = categories.find((category) => category.id === id);
     setCategory(selectedCategory);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -128,6 +142,21 @@ function LibraryCategoryPage() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <MuiAlert
+          severity="success"
+          elevation={6}
+          variant="filled"
+          onClose={handleCloseSnackbar}
+        >
+          {snackbarMessage}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 }
