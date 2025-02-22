@@ -14,11 +14,11 @@ import { Link } from "react-router-dom";
 
 const pages = [
   { name: "Ana Sayfa", path: "/" },
-  { name: "Yayımcı", path: "/yayimci" },
-  { name: "Kategori", path: "/kategori" },
-  { name: "Kitap", path: "/kitap" },
-  { name: "Yazar", path: "/yazar" },
   { name: "Kitap Alma", path: "/kitap-alma" },
+  { name: "Kitap", path: "/kitap" },
+  { name: "Kategori", path: "/kategori" },
+  { name: "Yazar", path: "/yazar" },
+  { name: "Yayımcı", path: "/yayimci" },
 ];
 
 function Navbar() {

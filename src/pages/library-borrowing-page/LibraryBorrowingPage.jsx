@@ -3,8 +3,18 @@ import { useLibrary } from "../../context/library-context/LibraryContext";
 import axios from "axios";
 import { useEffect } from "react";
 import Typography from "@mui/material/Typography";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 function LibraryBorrowingPage() {
+  // context hook
   const {
     books,
     borrowings,
@@ -14,29 +24,34 @@ function LibraryBorrowingPage() {
     fetchBooks,
   } = useLibrary();
 
+  // fetch işlemleri
   useEffect(() => {
     fetchBorrowings();
     fetchBooks();
   }, []);
 
+  // inputlardaki değişiklikleri takip eden fonksiyon
   const handleChange = (e) => {
+    // inputun name ve value değerlerini al
     const { name, value } = e.target;
 
-    if (name === "bookId") {
+    if (name === "bookId") { // Eğer input kitap seçimi ise
       const selectedBook = books.find((book) => book.id === +value) || null;
       setBorrowing((prev) => ({
         ...prev,
         book: selectedBook,
       }));
-    } else {
+    } else { // Diğer inputlar için
       setBorrowing((prev) => ({ ...prev, [name]: value }));
     }
   };
 
+  // Düzenleme işlemi
   const handleEdit = (borrowId) => {
+    // Düzenlenecek ödünç alma bilgisini al
     const borrowToEdit = borrowings.find((borrow) => borrow.id === borrowId);
-    if (borrowToEdit) {
-      setBorrowing({
+    if (borrowToEdit) { // Eğer ödünç alma bilgisi varsa
+      setBorrowing({ // Formu doldur
         id: borrowToEdit.id,
         borrowerName: borrowToEdit.borrowerName,
         borrowerMail: borrowToEdit.borrowerMail,
@@ -47,15 +62,17 @@ function LibraryBorrowingPage() {
     }
   };
 
+  // Form submit işlemi
   const handleSubmit = async (e) => {
+    // Formun default işlemlerini engelle
     e.preventDefault();
 
     try {
-      if (!borrowing.book?.id) {
+      if (!borrowing.book?.id) { // Eğer kitap seçimi yapılmamışsa
         console.error("Kitap seçimi zorunludur");
         return;
       }
-
+      // Ödünç alma bilgilerini formatla
       const formattedBorrowing = {
         borrowerName: borrowing.borrowerName,
         borrowerMail: borrowing.borrowerMail,
@@ -69,6 +86,7 @@ function LibraryBorrowingPage() {
         },
       };
 
+      // Eğer ödünç alma bilgisi varsa güncelleme, yoksa yeni ödünç alma bilgisi ekleme
       let response;
       if (borrowing.id) {
         // Update existing borrowing
@@ -94,9 +112,10 @@ function LibraryBorrowingPage() {
         );
       }
 
+      // Eğer işlem başarılıysa
       if (response.status === 200 || response.status === 201) {
         fetchBorrowings();
-        // Clear the form
+        // Formu sıfırla
         setBorrowing({
           borrowerName: "",
           borrowerMail: "",
@@ -105,7 +124,7 @@ function LibraryBorrowingPage() {
           book: null,
         });
       }
-    } catch (error) {
+    } catch (error) { // Eğer hata oluşursa
       console.error(
         "İşlem sırasında hata:",
         error.response?.data || error.message
@@ -113,6 +132,7 @@ function LibraryBorrowingPage() {
     }
   };
 
+  // Silme işlemi
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/api/v1/borrows/${id}`);
@@ -193,38 +213,42 @@ function LibraryBorrowingPage() {
           )}
         </form>
       </div>
-      <div className="borrows-table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>İsim</th>
-              <th>E-Posta</th>
-              <th>Alma Tarihi</th>
-              <th>İade Tarihi</th>
-              <th>Kitap</th>
-              <th>Düzenle</th>
-              <th>Sil</th>
-            </tr>
-          </thead>
-          <tbody>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">İsim</TableCell>
+              <TableCell align="center">E-Posta</TableCell>
+              <TableCell align="center">Alma Tarihi</TableCell>
+              <TableCell align="center">İade Tarihi</TableCell>
+              <TableCell align="center">Kitap</TableCell>
+              <TableCell align="center">Düzenle</TableCell>
+              <TableCell align="center">Sil</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {borrowings.map((borrow) => (
-              <tr key={borrow.id}>
-                <td>{borrow.borrowerName}</td>
-                <td>{borrow.borrowerMail}</td>
-                <td>{borrow.borrowingDate}</td>
-                <td>{borrow.returnDate || "-"}</td>
-                <td>{borrow.book?.name || "Bilinmiyor"}</td>
-                <td>
-                  <button onClick={() => handleEdit(borrow.id)}>Düzenle</button>
-                </td>
-                <td>
-                  <button onClick={() => handleDelete(borrow.id)}>Sil</button>
-                </td>
-              </tr>
+              <TableRow
+                key={borrow.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell align="center">{borrow.borrowerName}</TableCell>
+                <TableCell align="center">{borrow.borrowerMail}</TableCell>
+                <TableCell align="center">{borrow.borrowingDate}</TableCell>
+                <TableCell align="center">{borrow.returnDate || "-"}</TableCell>
+                <TableCell align="center">{borrow.book?.name || "Bilinmiyor"}</TableCell>
+                <TableCell align="center">
+                  <button onClick={() => handleEdit(borrow.id)}><EditIcon/></button>
+                </TableCell>
+                <TableCell align="center">
+                  <button onClick={() => handleDelete(borrow.id)}
+                    style={{ color: "red" }}><DeleteIcon/></button>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }

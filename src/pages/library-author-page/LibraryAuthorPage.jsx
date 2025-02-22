@@ -1,27 +1,38 @@
 import "./LibraryAuthorPage.styles.css";
 import axios from "axios";
-import { useEffect} from "react";
+import { useEffect } from "react";
 import { useLibrary } from "../../context/library-context/LibraryContext";
 import Typography from "@mui/material/Typography";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 function LibraryAuthorPage() {
-  const { authors, author, setAuthor,fetchAuthors } = useLibrary();
+  // context hook
+  const { authors, author, setAuthor, fetchAuthors } = useLibrary();
 
-
-
+  // fetch authors işlemi
   useEffect(() => {
     fetchAuthors();
   }, []);
 
+  // inputlardaki değişiklikleri takip eden fonksiyon
   const handleChange = (e) => {
     setAuthor({ ...author, [e.target.name]: e.target.value });
   };
 
+  // form submit işlemi
   const handleSubmit = async (e) => {
+    // formun default işlemlerini engelle
     e.preventDefault();
 
+    // yeni yazar eklemek için post, var olanı güncellemek için put requesti
     try {
       if (author.id) {
         await axios.put(
@@ -32,6 +43,7 @@ function LibraryAuthorPage() {
         await axios.post("http://localhost:8080/api/v1/authors", author);
       }
 
+      // formu sıfırla ve yazarları tekrar çek
       setAuthor({
         id: null,
         name: "",
@@ -40,10 +52,12 @@ function LibraryAuthorPage() {
       });
       fetchAuthors();
     } catch (error) {
+      // hata durumunda console'a yazdır
       console.error("İşlem sırasında hata oluştu:", error);
     }
   };
 
+  // yazar silme işlemi
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/api/v1/authors/${id}`);
@@ -53,6 +67,7 @@ function LibraryAuthorPage() {
     }
   };
 
+  // yazar düzenleme işlemi
   const handleEdit = (author) => {
     setAuthor(author);
   };
@@ -87,38 +102,41 @@ function LibraryAuthorPage() {
           <button type="submit">{author.id ? "Güncelle" : "Ekle"}</button>
         </form>
       </div>
-      <div className="authors-table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Ad</th>
-              <th>Doğum Tarihi</th>
-              <th>Ülke</th>
-              <th>Düzenle</th>
-              <th>Sil</th>
-            </tr>
-          </thead>
-          <tbody>
-            {authors.map((pub) => (
-              <tr key={pub.id}>
-                <td>{pub.name}</td>
-                <td>{pub.birthDate}</td>
-                <td>{pub.country}</td>
-                <td>
-                  <button onClick={() => handleEdit(pub)}>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Ad</TableCell>
+              <TableCell align="center">Doğum Tarihi</TableCell>
+              <TableCell align="center">Ülke</TableCell>
+              <TableCell align="center">Düzenle</TableCell>
+              <TableCell align="center">Sil</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {authors.map((auth) => (
+              <TableRow key={auth.id}>
+                <TableCell align="center">{auth.name}</TableCell>
+                <TableCell align="center">{auth.birthDate}</TableCell>
+                <TableCell align="center">{auth.country}</TableCell>
+                <TableCell align="center">
+                  <button onClick={() => handleEdit(auth)} >
                     <EditIcon />
                   </button>
-                </td>
-                <td>
-                  <button onClick={() => handleDelete(pub.id)}>
+                </TableCell>
+                <TableCell align="center">
+                  <button
+                    onClick={() => handleDelete(auth.id)} 
+                    style={{ color: "red" }}
+                  >
                     <DeleteIcon />
                   </button>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }

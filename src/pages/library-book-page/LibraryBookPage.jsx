@@ -5,8 +5,16 @@ import axios from "axios";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Typography from "@mui/material/Typography";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 
 function LibraryBookPage() {
+  // context hook
   const {
     books,
     book,
@@ -20,6 +28,7 @@ function LibraryBookPage() {
     fetchAuthors,
   } = useLibrary();
 
+  // fetch işlemleri
   useEffect(() => {
     fetchBooks();
     fetchCategories();
@@ -27,38 +36,45 @@ function LibraryBookPage() {
     fetchAuthors();
   }, []);
 
+  // inputlardaki değişiklikleri takip eden fonksiyon
   const handleChange = (e) => {
+    // inputun name ve value değerlerini al
     const { name, value } = e.target;
 
-    if (name === "authorId") {
+    // eğer input yazar seçimi ise yazarı set et
+    if (name === "authorId") { // eğer authorId ise yazarı set et
       setBook({
         ...book,
         author: authors.find((a) => a.id === parseInt(value)) || {},
       });
-    } else if (name === "publisherId") {
+    } else if (name === "publisherId") { // eğer publisherId ise yayınevi set et
       setBook({
         ...book,
         publisher: publishers.find((p) => p.id === parseInt(value)) || {},
       });
-    } else if (name === "categoryId") {
+    } else if (name === "categoryId") { // eğer categoryId ise kategoriyi set et
       setBook({
         ...book,
         categories: categories.filter((c) => c.id === parseInt(value)),
       });
-    } else {
+    } else { // diğer durumlarda input değerlerini set et
       setBook({ ...book, [name]: value });
     }
   };
 
+  // form submit işlemi
   const handleSubmit = async (e) => {
+    // formun default işlemlerini engelle
     e.preventDefault();
 
+    // yeni kitap eklemek için post, var olanı güncellemek için put requesti
     try {
       if (book.id) {
         await axios.put(`http://localhost:8080/api/v1/books/${book.id}`, book);
       } else {
         await axios.post("http://localhost:8080/api/v1/books", book);
       }
+      // formu sıfırla ve kitapları tekrar çek
       setBook({
         id: null,
         name: "",
@@ -74,6 +90,7 @@ function LibraryBookPage() {
     }
   };
 
+  // kitap silme işlemi
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8080/api/v1/books/${id}`);
@@ -83,6 +100,7 @@ function LibraryBookPage() {
     }
   };
 
+  // kitap düzenleme işlemi
   const handleEdit = (selectedBook) => {
     setBook(selectedBook);
   };
@@ -154,48 +172,60 @@ function LibraryBookPage() {
           <button type="submit">Kaydet</button>
         </form>
       </div>
-      <div className="books-table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Kitap Adı</th>
-              <th>Yayın Yılı</th>
-              <th>Stok</th>
-              <th>Yazar</th>
-              <th>Yayınevi</th>
-              <th>Kategoriler</th>
-              <th>Düzenle</th>
-              <th>Sil</th>
-            </tr>
-          </thead>
-          <tbody>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">Kitap Adı</TableCell>
+              <TableCell align="center">Yayın Yılı</TableCell>
+              <TableCell align="center">Stok</TableCell>
+              <TableCell align="center">Yazar</TableCell>
+              <TableCell align="center">Yayınevi</TableCell>
+              <TableCell align="center">Kategoriler</TableCell>
+              <TableCell align="center">Düzenle</TableCell>
+              <TableCell align="center">Sil</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {books.map((book) => (
-              <tr key={book.id}>
-                <td>{book.name}</td>
-                <td>{book.publicationYear}</td>
-                <td>{book.stock}</td>
-                <td>{book.author?.name || "Bilinmiyor"}</td>
-                <td>{book.publisher?.name || "Bilinmiyor"}</td>
-                <td>
+              <TableRow
+                key={book.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row" align="center">
+                  {book.name}
+                </TableCell>
+                <TableCell align="center">{book.publicationYear}</TableCell>
+                <TableCell align="center">{book.stock}</TableCell>
+                <TableCell align="center">
+                  {book.author?.name || "Bilinmiyor"}
+                </TableCell>
+                <TableCell align="center">
+                  {book.publisher?.name || "Bilinmiyor"}
+                </TableCell>
+                <TableCell align="center">
                   {book.categories
                     .map((category) => category.name)
                     .join(", ") || "Bilinmiyor"}
-                </td>
-                <td>
+                </TableCell>
+                <TableCell align="center">
                   <button onClick={() => handleEdit(book)}>
                     <EditIcon />
                   </button>
-                </td>
-                <td>
-                  <button onClick={() => handleDelete(book.id)}>
+                </TableCell>
+                <TableCell align="center">
+                  <button
+                    onClick={() => handleDelete(book.id)}
+                    style={{ color: "red" }}
+                  >
                     <DeleteIcon />
                   </button>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 }

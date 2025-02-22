@@ -49,13 +49,15 @@
 
 .publisher-table-container table {
   width: 75vw;
-  border: 2px solid #fff;
-  border-collapse: collapse;
+  border: #007bff 2px solid;
+  border-radius: 16px;
+  padding: 8px;
   margin-top: 20px;
   text-align: center;
+
 }
 
-.publisher-table-container th,
-td {
-  border-bottom: 2px solid #fff;
+.publisher-table-container thead {
+  background-color: #007bff;
+  color: white;
 }

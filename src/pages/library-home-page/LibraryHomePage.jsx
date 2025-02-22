@@ -2,17 +2,21 @@ import "./LibraryHomePage.styles.css";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import HomeCard from "../../components/home-card/HomeCard";
+import homeIcon from "../../assets/icon/book-icon.png";
 
 function LibraryHomePage() {
-  
   return (
     <>
       <Box>
         <div className="home-text-container">
-          <div className="home-text">
+          <div className="home-img-container">
+            {/* <img src="/home-screen.jpg" alt="HomeScreen" /> */}
+            <img src={homeIcon} alt="HomeScreen" />
             <Typography variant="h2" sx={{}} gutterBottom>
-              Kütüphane
+              LibraryApp
             </Typography>
+          </div>
+          <div className="home-text">
             <Typography variant="h4" sx={{ maxWidth: "400px" }} gutterBottom>
               Kişisel kütüphanenize hoş geldiniz.
             </Typography>
@@ -22,9 +26,6 @@ function LibraryHomePage() {
               kitaplarınızı kategorilere ayırabilirsiniz. Yayım evlerini,
               yazarları ve kitapları ekleyebilirsiniz.
             </Typography>
-          </div>
-          <div className="home-img-container">
-            <img src="/home-screen.jpg" alt="HomeScreen" />
           </div>
         </div>
         <div className="home-card-container">
