@@ -42,13 +42,13 @@ function LibraryCategoryPage() {
           `${import.meta.env.VITE_BASE_URL}/api/v1/categories/${category.id}`,
           category
         );
-        setSnackbarMessage("Yazar başarıyla güncellendi!");
+        setSnackbarMessage("Kategori başarıyla güncellendi!");
       } else {
         await axios.post(
           import.meta.env.VITE_BASE_URL + "/api/v1/categories",
           category
         );
-        setSnackbarMessage("Yazar başarıyla eklendi!");
+        setSnackbarMessage("Kategori başarıyla eklendi!");
       }
       setSnackbarOpen(true);
       // formu sıfırla ve kategorileri tekrar çek
@@ -66,7 +66,7 @@ function LibraryCategoryPage() {
       await axios.delete(
         `${import.meta.env.VITE_BASE_URL}/api/v1/categories/${id}`
       );
-      setSnackbarMessage("Yazar başarıyla silindi!");
+      setSnackbarMessage("Kategori başarıyla silindi!");
       setSnackbarOpen(true);
       fetchCategories();
     } catch (error) {

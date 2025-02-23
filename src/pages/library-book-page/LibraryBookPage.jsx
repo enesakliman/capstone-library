@@ -79,10 +79,10 @@ function LibraryBookPage() {
     try {
       if (book.id) {
         await axios.put(`${import.meta.env.VITE_BASE_URL}/api/v1/books/${book.id}`, book);
-        setSnackbarMessage("Yazar başarıyla güncellendi!");
+        setSnackbarMessage("Kategori başarıyla güncellendi!");
       } else {
         await axios.post(import.meta.env.VITE_BASE_URL+"/api/v1/books", book);
-        setSnackbarMessage("Yazar başarıyla eklendi!");
+        setSnackbarMessage("Kategori başarıyla eklendi!");
       }
       setSnackbarOpen(true);
       // formu sıfırla ve kitapları tekrar çek
@@ -105,7 +105,7 @@ function LibraryBookPage() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/v1/books/${id}`);
-      setSnackbarMessage("Yazar başarıyla silindi!");
+      setSnackbarMessage("Kategori başarıyla silindi!");
       setSnackbarOpen(true);
       fetchBooks();
     } catch (error) {

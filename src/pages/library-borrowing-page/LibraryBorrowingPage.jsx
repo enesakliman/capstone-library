@@ -102,13 +102,13 @@ function LibraryBorrowingPage() {
           `${import.meta.env.VITE_BASE_URL}/api/v1/borrows/${borrowing.id}`,
           formattedBorrowing
         );
-        setSnackbarMessage("Yazar başarıyla güncellendi!");
+        setSnackbarMessage("Kategori başarıyla güncellendi!");
       } else {
         response = await axios.post(
           import.meta.env.VITE_BASE_URL+"/api/v1/borrows",
           formattedBorrowing
         );
-        setSnackbarMessage("Yazar başarıyla eklendi!");
+        setSnackbarMessage("Kategori başarıyla eklendi!");
       }
       setSnackbarOpen(true);
       // Eğer işlem başarılıysa
@@ -136,7 +136,7 @@ function LibraryBorrowingPage() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/v1/borrows/${id}`);
-      setSnackbarMessage("Yazar başarıyla silindi!");
+      setSnackbarMessage("Kategori başarıyla silindi!");
       setSnackbarOpen(true);
       fetchBorrowings();
     } catch (error) {
