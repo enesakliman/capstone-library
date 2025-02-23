@@ -46,3 +46,10 @@
   }
 
 
+.borrows-input-container select {
+    width: 150px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
