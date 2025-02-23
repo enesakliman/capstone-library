@@ -34,12 +34,12 @@ function LibraryPublisherPage() {
     try {
       if (publisher.id) {
         await axios.put(
-          `http://localhost:8080/api/v1/publishers/${publisher.id}`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/publishers/${publisher.id}`,
           publisher
         );
         setSnackbarMessage("Yayınevi başarıyla güncellendi!");
       } else {
-        await axios.post("http://localhost:8080/api/v1/publishers", publisher);
+        await axios.post(import.meta.env.VITE_BASE_URL + "/api/v1/publishers", publisher);
         setSnackbarMessage("Yayınevi başarıyla eklendi!");
       }
       setSnackbarOpen(true);
@@ -58,7 +58,7 @@ function LibraryPublisherPage() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/publishers/${id}`);
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/v1/publishers/${id}`);
       setSnackbarMessage("Yayınevi başarıyla silindi!");
       setSnackbarOpen(true);
       fetchPublishers();

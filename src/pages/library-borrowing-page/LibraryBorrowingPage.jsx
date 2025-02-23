@@ -99,13 +99,13 @@ function LibraryBorrowingPage() {
       let response;
       if (borrowing.id) {
         response = await axios.put(
-          `http://localhost:8080/api/v1/borrows/${borrowing.id}`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/borrows/${borrowing.id}`,
           formattedBorrowing
         );
         setSnackbarMessage("Yazar başarıyla güncellendi!");
       } else {
         response = await axios.post(
-          "http://localhost:8080/api/v1/borrows",
+          import.meta.env.VITE_BASE_URL+"/api/v1/borrows",
           formattedBorrowing
         );
         setSnackbarMessage("Yazar başarıyla eklendi!");
@@ -135,7 +135,7 @@ function LibraryBorrowingPage() {
   // Silme işlemi
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/borrows/${id}`);
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/v1/borrows/${id}`);
       setSnackbarMessage("Yazar başarıyla silindi!");
       setSnackbarOpen(true);
       fetchBorrowings();

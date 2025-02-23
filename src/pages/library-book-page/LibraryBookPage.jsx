@@ -78,10 +78,10 @@ function LibraryBookPage() {
     // yeni kitap eklemek için post, var olanı güncellemek için put requesti
     try {
       if (book.id) {
-        await axios.put(`http://localhost:8080/api/v1/books/${book.id}`, book);
+        await axios.put(`${import.meta.env.VITE_BASE_URL}/api/v1/books/${book.id}`, book);
         setSnackbarMessage("Yazar başarıyla güncellendi!");
       } else {
-        await axios.post("http://localhost:8080/api/v1/books", book);
+        await axios.post(import.meta.env.VITE_BASE_URL+"/api/v1/books", book);
         setSnackbarMessage("Yazar başarıyla eklendi!");
       }
       setSnackbarOpen(true);
@@ -104,7 +104,7 @@ function LibraryBookPage() {
   // kitap silme işlemi
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/books/${id}`);
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/v1/books/${id}`);
       setSnackbarMessage("Yazar başarıyla silindi!");
       setSnackbarOpen(true);
       fetchBooks();

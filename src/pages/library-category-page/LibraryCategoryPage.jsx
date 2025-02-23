@@ -39,12 +39,15 @@ function LibraryCategoryPage() {
     try {
       if (category.id) {
         await axios.put(
-          `http://localhost:8080/api/v1/categories/${category.id}`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/categories/${category.id}`,
           category
         );
         setSnackbarMessage("Yazar başarıyla güncellendi!");
       } else {
-        await axios.post("http://localhost:8080/api/v1/categories", category);
+        await axios.post(
+          import.meta.env.VITE_BASE_URL + "/api/v1/categories",
+          category
+        );
         setSnackbarMessage("Yazar başarıyla eklendi!");
       }
       setSnackbarOpen(true);
@@ -59,15 +62,15 @@ function LibraryCategoryPage() {
 
   // kategori silme işlemi
   const handleDelete = async (id) => {
-    if (window.confirm("Bu kategoriyi silmek istediğinizden emin misiniz?")) {
-      try {
-        await axios.delete(`http://localhost:8080/api/v1/categories/${id}`);
-        setSnackbarMessage("Yazar başarıyla silindi!");
-        setSnackbarOpen(true);
-        fetchCategories();
-      } catch (error) {
-        console.error("Silme işlemi sırasında hata oluştu:", error);
-      }
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/categories/${id}`
+      );
+      setSnackbarMessage("Yazar başarıyla silindi!");
+      setSnackbarOpen(true);
+      fetchCategories();
+    } catch (error) {
+      console.error("Silme işlemi sırasında hata oluştu:", error);
     }
   };
 

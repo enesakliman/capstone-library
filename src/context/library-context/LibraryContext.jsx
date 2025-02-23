@@ -73,7 +73,7 @@ export const LibraryProvider = ({ children }) => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/v1/categories"
+        import.meta.env.VITE_BASE_URL + "/api/v1/categories"
       );
       setCategories(response.data);
     } catch (error) {
@@ -84,7 +84,7 @@ export const LibraryProvider = ({ children }) => {
   const fetchPublishers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:8080/api/v1/publishers"
+        import.meta.env.VITE_BASE_URL + '/api/v1/publishers'
       );
       setPublishers(response.data);
     } catch (error) {
@@ -94,7 +94,7 @@ export const LibraryProvider = ({ children }) => {
 
   const fetchAuthors = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/v1/authors");
+      const response = await axios.get(import.meta.env.VITE_BASE_URL +"/api/v1/authors");
       setAuthors(response.data);
     } catch (error) {
       console.error("Yazarlar alınırken hata oluştu:", error);
@@ -103,7 +103,7 @@ export const LibraryProvider = ({ children }) => {
 
   const fetchBooks = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/v1/books");
+      const response = await axios.get(import.meta.env.VITE_BASE_URL + "/api/v1/books");
       setBooks(response.data);
     } catch (error) {
       console.error("Kitaplar alınırken hata oluştu:", error);
@@ -112,7 +112,7 @@ export const LibraryProvider = ({ children }) => {
 
   const fetchBorrowings = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/v1/borrows");
+      const response = await axios.get(import.meta.env.VITE_BASE_URL + "/api/v1/borrows");
       setBorrowings(response.data);
     } catch (error) {
       console.error("Ödünçler alınırken hata oluştu:", error);

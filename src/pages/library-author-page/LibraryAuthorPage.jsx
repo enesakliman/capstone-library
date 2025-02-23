@@ -39,12 +39,12 @@ function LibraryAuthorPage() {
     try {
       if (author.id) {
         await axios.put(
-          `http://localhost:8080/api/v1/authors/${author.id}`,
+          `${import.meta.env.VITE_BASE_URL}/api/v1/authors/${author.id}`,
           author
         );
         setSnackbarMessage("Yazar başarıyla güncellendi!");
       } else {
-        await axios.post("http://localhost:8080/api/v1/authors", author);
+        await axios.post(import.meta.env.VITE_BASE_URL+"/api/v1/authors", author);
         setSnackbarMessage("Yazar başarıyla eklendi!");
       }
       setSnackbarOpen(true);
@@ -64,7 +64,7 @@ function LibraryAuthorPage() {
   // yazar silme işlemi
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/api/v1/authors/${id}`);
+      await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/v1/authors/${id}`);
       setSnackbarMessage("Yazar başarıyla silindi!");
       setSnackbarOpen(true);
       fetchAuthors();
