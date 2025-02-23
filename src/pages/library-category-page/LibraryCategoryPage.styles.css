@@ -45,18 +45,3 @@
     transition: all 0.3s;
   }
   
-  /* Publisher Table */
-  
-  .categories-table-container table {
-    width: 75vw;
-    border: 2px solid #fff;
-    border-collapse: collapse;
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .categories-table-container th,
-  td {
-    border-bottom: 2px solid #fff;
-  }
-  

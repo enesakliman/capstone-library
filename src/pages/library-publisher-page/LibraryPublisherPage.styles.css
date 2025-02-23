@@ -45,19 +45,6 @@
   transition: all 0.3s;
 }
 
-/* Publisher Table */
 
-.publisher-table-container table {
-  width: 75vw;
-  border: #007bff 2px solid;
-  border-radius: 16px;
-  padding: 8px;
-  margin-top: 20px;
-  text-align: center;
 
-}
 
-.publisher-table-container thead {
-  background-color: #007bff;
-  color: white;
-}

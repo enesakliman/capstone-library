@@ -46,20 +46,3 @@
   }
 
 
-  /* Books Table */
-  
-  .borrows-table-container table {
-    width: 75vw;
-    border: 2px solid #fff;
-    border-collapse: collapse;
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .borrows-table-container th,
-  td {
-    border-bottom: 2px solid #fff;
-  }
-
-
-  

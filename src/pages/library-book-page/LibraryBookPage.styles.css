@@ -46,20 +46,12 @@
   }
 
 
-  /* Books Table */
-  
-  .books-table-container table {
-    width: 75vw;
-    border: 2px solid #fff;
-    border-collapse: collapse;
-    margin-top: 20px;
-    text-align: center;
-  }
-  
-  .books-table-container th,
-  td {
-    border-bottom: 2px solid #fff;
-  }
-
+.books-input-container select {
+    width: 300px;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 5px;
+}
 
   

@@ -16,21 +16,26 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 
 function LibraryPublisherPage() {
+  // context hook
   const { publishers, publisher, setPublisher, fetchPublishers } = useLibrary();
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
+  // fetch işlemi
   useEffect(() => {
     fetchPublishers();
   }, []);
 
+  // input değerlerini alır
   const handleChange = (e) => {
     setPublisher({ ...publisher, [e.target.name]: e.target.value });
   };
 
+  // form submit işlemi
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // sayfa yenilenmesini engeller
 
+    // yeni yayınevi ekler
     try {
       if (publisher.id) {
         await axios.put(
@@ -44,6 +49,7 @@ function LibraryPublisherPage() {
       }
       setSnackbarOpen(true);
 
+      // inputları temizler ve yayınevlerini tekrar çeker
       setPublisher({
         id: null,
         name: "",
@@ -51,11 +57,12 @@ function LibraryPublisherPage() {
         address: "",
       });
       fetchPublishers();
-    } catch (error) {
+    } catch (error) { // hata durumunda
       console.error("İşlem sırasında hata oluştu:", error);
     }
   };
 
+  // yayınevi silme işlemi
   const handleDelete = async (id) => {
     try {
       await axios.delete(`${import.meta.env.VITE_BASE_URL}/api/v1/publishers/${id}`);
@@ -67,10 +74,12 @@ function LibraryPublisherPage() {
     }
   };
 
+  // yayınevi düzenleme işlemi
   const handleEdit = (pub) => {
     setPublisher(pub);
   };
 
+  // snackbar kapatma işlemi
   const handleCloseSnackbar = () => {
     setSnackbarOpen(false);
   };
