@@ -22,8 +22,7 @@ function LibraryHomePage() {
             </Typography>
             <Typography variant="h6" sx={{ maxWidth: "400px" }} gutterBottom>
               Kişisel kütüphanenizde kitaplarınızı ekleyebilir, düzenleyebilir
-              ve silebilirsiniz. Ayrıca kitaplarınızı kategorilere göre
-              filtreleyebilirsiniz. Yayın evi ve yazarlarınızı ekleyebilir,
+              ve silebilirsiniz. Ayrıca kitaplarınızın kategorilerini belirleyebilirsiniz. Yayın evi ve yazarlarınızı ekleyebilir,
               düzenleyebilir ve silebilirsiniz.
             </Typography>
           </div>
